@@ -1,0 +1,4 @@
+(library
+ (name absente)
+ (public_name absente)
+ (libraries unix containers extunix))
