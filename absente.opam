@@ -10,13 +10,12 @@ homepage: "https://github.com/desumn/absente"
 bug-reports: "https://github.com/desumn/absente/issues"
 depends: [
   "dune" {>= "2.9"}
-  "ocaml" {>= "4.06"}
   "extunix"
   "containers"
   "odoc" {with-doc}
 ]
 build: [
-  ["dune" "subst" "--root" "."] {dev}
+  ["dune" "subst"] {dev}
   [
     "dune"
     "build"
@@ -24,8 +23,7 @@ build: [
     name
     "-j"
     jobs
-    "--promote-install-files"
-    "false"
+    "--promote-install-files=false"
     "@install"
     "@runtest" {with-test}
     "@doc" {with-doc}
