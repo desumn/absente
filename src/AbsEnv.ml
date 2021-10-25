@@ -61,7 +61,7 @@ let array_of_environment env =
   if env = CCFQueue.empty then CCArray.empty
   else CCFQueue.fold (fun env_arr var -> add_opt_var (string_of_variable var) env_arr) CCArray.empty env
 
-let get_current_environment = Unix.environment () |> environment_of_array
+let get_current_environment () = Unix.environment () |> environment_of_array
 
 
 
