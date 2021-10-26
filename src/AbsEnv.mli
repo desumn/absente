@@ -55,3 +55,19 @@ val array_of_environment : environment -> string array
 
 val get_current_environment : unit -> environment
 (** [get_current_environment] gets the current environment of the process. *)
+
+val number_of_occurrences : environment -> name -> int
+(** [number_of_occurrences env var_name] returns a positive integer corresponding to the number of occurrences of a variable with a certain name in a env. *)
+
+val get_var_version : environment -> int -> name -> variable option
+(** [get_var_version env version var_name] returns a variable, corresponding to the "version"-nth occurrence of the variable in env. *)
+
+val get_var : environment -> name -> variable option
+(** [get_var env var_name] returns the variable associated with var_name in env. *)
+
+val get : environment -> name -> value option
+(** [get env var_name] returns the value associated with var_name in env. *)
+
+val get_first_var_version : environment -> name -> variable option
+(** [get_first_var_version env var_name] get the first version of the var associated with var_name in env. Equivalent to [get_var_version env 0 var_name] *)
+

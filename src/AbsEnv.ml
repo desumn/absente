@@ -84,4 +84,27 @@ let array_of_environment env =
 let get_current_environment () = Unix.environment () |> environment_of_array
 
 
+let var_occurrence env var_name = 
+  CCFQueue.fold (fun env var -> if (get_name @@ get_var var) = var_name then (var :: env) else env) [] env
 
+let number_of_occurrences env var_name = var_occurrence env var_name |> List.length
+
+let get_var_version_occ version occurrence =
+  (List.nth_opt (List.rev occurrence) version) |> (fun opt -> Option.bind opt (fun entry -> Some(get_var entry))) 
+  (* the list is reversed to preserve order, if it was not, the first version of variable would be last, and the last version of a variable would be first.*)
+  
+let get_var_version env version var_name =
+  get_var_version_occ version (var_occurrence env var_name)
+
+let get_var env var_name =
+  let input_var_occurrence = var_occurrence env var_name in
+  let input_number_of_occurrences = List.length input_var_occurrence in
+  let last_version = 
+    if input_number_of_occurrences > 0 
+    then get_var_version_occ (input_number_of_occurrences - 1) input_var_occurrence
+    else None 
+  in last_version
+
+let get env var_name = Option.bind (get_var env var_name) (fun var -> Some (get_value var))
+
+let get_first_var_version env var_name = get_var_version env 0 var_name
