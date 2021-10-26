@@ -26,14 +26,14 @@ val string_of_variable : variable -> string option
 
 val variable_of_string : string -> variable option
 (** [variable_of_string str] convert a string of the form "name=value" to a variable. 
-    It return None if the left-hand side of the string is empty or contains an "=" sign. *)
+    It return None if the left-hand side of the string is empty or contains an "=" sign or if the right-hand side of the variable is empty.*)
 
 
 type environment
-(** The type of an Unix environment, and at the same time the type of an history of changes to the environement.
+(** The type of an Unix environment.
     You can convert the current process environement (representend in OCaml as an array of string) to this type, and conversely.
     
-    This type is an history of change as adding two variable with the same name is a legal operation, and do not erase the modified variable in the returned environment.
+    Note that adding two variable with the same name is a legal operation, and do not erase the modified variable in the returned environment.
     When converted to an array that can be used with exec, only the last variable will be available.*)
 
 
