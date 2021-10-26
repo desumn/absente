@@ -28,6 +28,7 @@ val variable_of_string : string -> variable option
 (** [variable_of_string str] convert a string of the form "name=value" to a variable. 
     It return None if the left-hand side of the string is empty or contains an "=" sign or if the right-hand side of the variable is empty.*)
 
+(** {2 Environments} *)
 
 type environment
 (** The type of an Unix environment.
@@ -35,7 +36,6 @@ type environment
     
     Note that adding two variable with the same name is a legal operation, and do not erase the modified variable in the returned environment.
     When converted to an array that can be used with exec, only the last variable will be available.*)
-
 
 val empty : environment
 (** An environment that contains no variables.*)
@@ -70,4 +70,3 @@ val get : environment -> name -> value option
 
 val get_first_var_version : environment -> name -> variable option
 (** [get_first_var_version env var_name] get the first version of the var associated with var_name in env. Equivalent to [get_var_version env 0 var_name] *)
-
