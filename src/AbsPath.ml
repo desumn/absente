@@ -60,7 +60,10 @@ let parse_path path_string =
     | Error _ -> None
     | Ok components -> Some ("i." :: components) (* "i." is a special "implicit prefix", equivalent to "." *)
     end
-  | Ok (prefix, components) -> Some (prefix :: components)
+  | Ok (prefix, components) -> 
+    let comp_len = List.length components in
+    let fixed_components = List.filteri (fun i comp -> i = comp_len - 1 || comp <> "") components in (* the only empty string in the path should be the last, but you can form as much empty string as you want with path like "/////" *)
+    Some (prefix :: fixed_components)
 
 let parse_path_unsafe path = Option.value ~default:[""] (parse_path path)
 
