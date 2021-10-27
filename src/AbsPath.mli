@@ -3,6 +3,8 @@
 type path 
 (** The type of Unix path. *)
 
+(** {Path basic functions}*)
+
 val get_filename : path -> string option
 (** [get_filename path] returns a filename if the path is not a directory, None if it is empty or a directory.*)
 
@@ -35,3 +37,11 @@ val path_of_string : string -> path option
 
 val string_of_path : path -> string option
 (** [string_of_path path] returns a string representation of path, if path is invalid, it returns None. *)
+
+(* 3 Path manipulation *)
+
+val get_parent : path -> path option
+(** [get_parent path] returns the parent of path. It returns None if the path is invalid, and do not change path if it is the root. ("/")*)
+
+val expand_path : path -> path option
+(** [expand_path path] expands "path", in other word, it transforms any relative path into an absolute path, removing (and modifying the path accordingly) any "." and ".."*)
