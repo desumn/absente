@@ -10,7 +10,7 @@ val path_length : path -> int
 (** [path_length path] returns the number of components of a path. It's the numbers of directory plus the filename if it exists. 
     For example "/usr/bin/opam" has length 3, and "/usr/bin/" has length 2.*) 
 
-val is_drectory : path -> bool
+val is_directory : path -> bool
 (** [is_directory path] returns true if the path is a directory, false otherwise or if it is empty.*)
 
 val is_absolute : path -> bool
