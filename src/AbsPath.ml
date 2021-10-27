@@ -54,4 +54,13 @@ let parse_path path_string =
 
 let parse_path_unsafe path = Option.value ~default:[""] (parse_path path)
 
-let string_of_path path = parse_path path
+let path_of_string path = parse_path path
+
+let string_of_path path = 
+  match get_prefix path with
+  | None -> None
+  | Some prefix ->
+    match get_components path with
+    | None -> None
+    | Some components -> Some (CCList.to_string ~start:prefix ~sep:"/" (Fun.id) components)
+
