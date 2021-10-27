@@ -19,6 +19,9 @@ val is_absolute : path -> bool
 val is_relative : path -> bool
 (** [is_absolute path] returns true if the path is relative, false otherwise. (it returns false for an empty path) *)
 
+val is_implicit : path -> bool
+(** [is_implicit path] returns true if the path is implicit, an implicit path is a special case of relative path, where "./" or "../" are not specified.*)
+    
 (** {2 Path parsing} *)
 
 val parse_path : string -> path option 

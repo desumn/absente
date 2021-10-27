@@ -21,7 +21,13 @@ let is_absolute path =
   | Some "/" -> true
   | _ -> false
 
-  let is_relative path = not (is_absolute path)
+let is_relative path = not (is_absolute path)
+
+let is_implicit path =
+  match get_prefix path with
+  | Some "i." -> true
+  | _ -> false
+
 
 (* Path parser *)
 
@@ -49,7 +55,11 @@ let path_parser =
 
 let parse_path path_string =
   match CCParse.parse_string path_parser path_string with
-  | Error _ -> None
+  | Error _ ->
+    begin match CCParse.parse_string components_parser path_string with
+    | Error _ -> None
+    | Ok components -> Some ("i." :: components) (* "i." is a special "implicit prefix", equivalent to "." *)
+    end
   | Ok (prefix, components) -> Some (prefix :: components)
 
 let parse_path_unsafe path = Option.value ~default:[""] (parse_path path)
@@ -59,7 +69,8 @@ let path_of_string path = parse_path path
 let string_of_path path = 
   match get_prefix path with
   | None -> None
-  | Some prefix ->
+  | Some prefix_ ->
+    let prefix = if prefix_ = "i." then "" else prefix_ in
     match get_components path with
     | None -> None
     | Some components -> Some (CCList.to_string ~start:prefix ~sep:"/" (Fun.id) components)
