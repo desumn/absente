@@ -1,9 +1,9 @@
 
 type path = string list
 
-let get_first_component path = CCList.head_opt path
+let get_prefix path = CCList.head_opt path
 
-let exclude_first_component path = CCList.tail_opt path
+let get_components path = CCList.tail_opt path
 
 let path_length path = (CCList.length path) - 1
 
@@ -15,7 +15,7 @@ let is_directory path =
   | _ -> false
 
 let is_absolute path =
-  match get_first_component path with
+  match get_prefix path with
   | Some "/" -> true
   | _ -> false
 
