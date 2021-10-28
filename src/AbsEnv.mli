@@ -8,65 +8,42 @@
 
 type name = string 
 type value = string list
-type variable
-(** The type of a single environnement variable. *)
-
-val new_var : name -> value -> variable option
-(** [new_var name value] create a new variable, returns None if "name" is empty or contains an "=" sign. *)
-
-val get_name : variable -> name
-(** [get_name var] get the name associated with the var environment variable. *)
-
-val get_value : variable -> value
-(** [get_value var] get the value associated with the var environement variable.*)
-
-val string_of_variable : variable -> string option
-(** [string_of_variable var] convert var to a "name=value" string. 
-    It returns None if name is empty or if it contains an '=' sign. *)
-
-val variable_of_string : string -> variable option
-(** [variable_of_string str] convert a string of the form "name=value" to a variable. 
-    It return None if the left-hand side of the string is empty or contains an "=" sign or if the right-hand side of the variable is empty.*)
-
-(** {2 Environments} *)
 
 type environment
 (** The type of an Unix environment.
-    You can convert the current process environement (representend in OCaml as an array of string) to this type, and conversely.
-    
-    Note that adding two variable with the same name is a legal operation, and do not erase the modified variable in the returned environment.
-    When converted to an array that can be used with exec, only the last variable will be available.*)
+    You can convert the current process environement (representend in OCaml as an array of string) to this type, and conversely.*)
 
 val empty : environment
 (** An environment that contains no variables.*)
+    
 
-val add_var : variable -> environment -> environment
-(** [add_var var env] add an environment variable to the environment.*)
+val exists_version : name -> environment -> bool
+(** [exists_version name env] returns true if any version of variable with a specific name exists in the environment, it could returns true if a variable has been removed ! Use [exist] if you don't want that. *)
 
-val rem_var : name -> environment -> environment
-(** [rem_var name env] remove an environment variable from the environment. 
-    Note that it check if the name of the variable is valid, if not, it returns the environment unmodified, otherwise, it add a variable with the same name and an empty value to the environment. *)
+val exists : name -> environment -> bool
+(** [exists name env] returns true if a variable exists in the current environment, false otherwise. 
+    You should know that the non-existence of a varialbe in the environment doesn't mean that no version of it exists ! Use [exists_version] if you wnat to check if versions exists.*)
+
+val get : name -> environment -> value option 
+(* [get name env] returns [Some value] if a variable name exists in the environment, where value is its value.*)
+
+val get_version : name -> int -> environment -> value option
+(** [get_version name version env] returns [Some value] if a variable associated with name of a specific version (versionb are 0-indexed, version 0 is the initial version (or first) of a value) exist in the environment.
+    Returns None if there is no value associated with the variable, the version, or if the value associated with the version is []*)
+
+val version_count : name -> environment -> int
+(** [version_count name env] get the number of version of a specific variable in an environment.*)
+
+
+val set : name -> value -> environment -> environment
+(** [set name value env] returns an environment, where the value associated with name was modified, and the precedent value added into "versions" of the name variable.
+    If a variable doesn't exist, create it, so "set_value" also serves as "add_value". *)
+
+val remove : name -> environment -> environment
+(** [remove name env] returns an environment without the variable associated with name, value of this variable are always accessible with [get_version].*)
 
 val environment_of_array : string array -> environment
-(** [environment_of_array] converts a string array of variable to an environment. (For an example of a string array of variable, see Unix.environment)*)
-
-val array_of_environment : environment -> string array
-(** [array_of_environment] converts an environment to a string array of variable. (For an example of a string array of variable, see Unix.environment) *)
+(** [environment_of_array env] convert an array of "name=value" strings to an environment. For an example of such array, see Unix.environment ()*)
 
 val get_current_environment : unit -> environment
-(** [get_current_environment] gets the current environment of the process. *)
-
-val number_of_occurrences : environment -> name -> int
-(** [number_of_occurrences env var_name] returns a positive integer corresponding to the number of occurrences of a variable with a certain name in a env. *)
-
-val get_var_version : environment -> int -> name -> variable option
-(** [get_var_version env version var_name] returns a variable, corresponding to the "version"-nth occurrence of the variable in env. *)
-
-val get_var : environment -> name -> variable option
-(** [get_var env var_name] returns the variable associated with var_name in env. *)
-
-val get : environment -> name -> value option
-(** [get env var_name] returns the value associated with var_name in env. *)
-
-val get_first_var_version : environment -> name -> variable option
-(** [get_first_var_version env var_name] get the first version of the var associated with var_name in env. Equivalent to [get_var_version env 0 var_name] *)
+(** [get_current_environment ()] convert the current process environment to an Absente environment, and returns it.*)
