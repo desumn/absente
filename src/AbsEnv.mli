@@ -45,5 +45,11 @@ val remove : name -> environment -> environment
 val environment_of_array : string array -> environment
 (** [environment_of_array env] convert an array of "name=value" strings to an environment. For an example of such array, see Unix.environment ()*)
 
+val array_of_environment : environment -> string array
+(** [array_of_environment arr] convert an environment to an array of "name=value", note that value are sorted in the returned array.*)
+
 val get_current_environment : unit -> environment
 (** [get_current_environment ()] convert the current process environment to an Absente environment, and returns it.*)
+
+val get_current_environment : environment -> unit
+(** [set_current_environment env] takes an Absente environment, and modify the current process environment according to what is set in input the Absente environment.*)

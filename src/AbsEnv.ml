@@ -6,7 +6,7 @@ let valid_name name = not @@ CCString.is_empty name || CCString.contains name '=
 module Name_module = CCString
 type value = string list
 
-let _string_of_value value = CCList.to_string ~sep:":" (CCFun.id) value
+let string_of_value value = CCList.to_string ~sep:":" (CCFun.id) value
 let value_of_string str = CCString.split_on_char ':' str
 
 let variable_of_string str = 
@@ -16,6 +16,13 @@ let variable_of_string str =
       if not @@ valid_name name
       then None
       else Some (name, value_of_string value_string)
+      
+let string_of_variable var =
+  let name, value = var in
+  if (not @@ valid_name name) || CCList.is_empty value
+  then None
+  else Some (Format.sprintf "%s=%s" name (string_of_value value))
+
 
 module Environment = CCMap.Make(Name_module)
 
@@ -86,4 +93,22 @@ let environment_of_array array =
   if array = CCArray.empty then empty
   else CCArray.fold (fun env var -> set_if_valid var env ) empty array
 
+let array_of_environment env =
+  let add_if_valid name value_list array =
+    let _, value = Option.value ~default:(0 (* does not matter *), []) (get_last_version value_list) in
+    match string_of_variable (name, value) with
+    | None -> array
+    | Some str -> CCArray.append array [|str|]
+  in
+  Environment.fold (fun key value env_arr -> if exists key env then add_if_valid key value env_arr else env_arr) env CCArray.empty
+
 let get_current_environment () = Unix.environment () |> environment_of_array
+
+let set_current_environment env =
+  Environment.iter
+  begin fun key _ ->
+    match get key env with
+    | None -> ExtUnix.Specific.unsetenv key (* if versions of variable exists, but get returns None, it means that it has to be removed or that it was removed *)
+    | Some value -> ExtUnix.Specific.setenv key (string_of_value value) true
+  end
+  env
