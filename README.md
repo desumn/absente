@@ -1,6 +1,6 @@
 # absente
 
-Absente is an OCaml that aims to provide an interface on top of Unix bindings.
+Absente is an OCaml library that aims to provide an interface on top of Unix bindings.
 
 It is not ready for usage, and really do not even have a fixed API (that explains why this README is so empty), you shouldn't use it.
 
