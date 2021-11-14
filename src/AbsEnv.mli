@@ -51,5 +51,5 @@ val array_of_environment : environment -> string array
 val get_current_environment : unit -> environment
 (** [get_current_environment ()] convert the current process environment to an Absente environment, and returns it.*)
 
-val get_current_environment : environment -> unit
+val set_current_environment : environment -> unit
 (** [set_current_environment env] takes an Absente environment, and modify the current process environment according to what is set in input the Absente environment.*)
