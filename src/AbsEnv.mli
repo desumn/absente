@@ -12,10 +12,12 @@ type value = string list
 type environment
 (** The type of an Unix environment.
     You can convert the current process environement (representend in OCaml as an array of string) to this type, and conversely.*)
+    
+module Manipulation :
+sig
 
 val empty : environment
 (** An environment that contains no variables.*)
-    
 
 val exists_version : name -> environment -> bool
 (** [exists_version name env] returns true if any version of variable with a specific name exists in the environment, it could returns true if a variable has been removed ! Use [exist] if you don't want that. *)
@@ -53,3 +55,5 @@ val get_current_environment : unit -> environment
 
 val set_current_environment : environment -> unit
 (** [set_current_environment env] takes an Absente environment, and modify the current process environment according to what is set in input the Absente environment.*)
+
+end

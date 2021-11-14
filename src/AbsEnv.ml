@@ -29,6 +29,8 @@ module Environment = CCMap.Make(Name_module)
 type environment = (int * value) list Environment.t
 (* a list of version of the variable is associated with its name, the int represents the "version number"*)
 
+(* beginning of the low-level manipulation module *)
+module Manipulation = struct
 let empty = Environment.empty
 
 let get_last_version (version_list : (int * value) list) = CCList.last_opt (CCList.sort (fun (o1, _) (o2, _) -> Int.compare o1 o2) version_list)
@@ -112,3 +114,5 @@ let set_current_environment env =
     | Some value -> ExtUnix.Specific.setenv key (string_of_value value) true
   end
   env
+  
+end
