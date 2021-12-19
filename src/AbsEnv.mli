@@ -39,7 +39,6 @@ val get_version : name -> int -> environment -> value option
 val version_count : name -> environment -> int
 (** [version_count name env] get the number of version of a specific variable in an environment.*)
 
-
 val set : name -> value -> environment -> environment
 (** [set name value env] returns an environment, where the value associated with name was modified, and the precedent value added into "versions" of the name variable.
     If a variable doesn't exist, create it, so "set_value" also serves as "add_value". *)

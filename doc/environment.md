@@ -32,6 +32,5 @@ An easy way to know if a variable exists should also be added.
 
 This is the basic "low-level" interface, more features could be added in the future, for example some special cases functions for "standards" variables.
 
-# Higher-level environment
 
-In an environment with history, we would want to be able to rollback, without fiddling with the number of versions of a variable and setting it manually, it would be error prone and a function could easily do this for us. 
+#

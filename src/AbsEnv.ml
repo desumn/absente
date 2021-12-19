@@ -1,4 +1,3 @@
-
 type name = String.t
 
 let valid_name name = not @@ CCString.is_empty name || CCString.contains name '='
@@ -28,7 +27,6 @@ let string_of_variable var =
   if (not @@ valid_name name) || is_empty value
   then None
   else Some (Format.sprintf "%s=%s" name (string_of_value value))
-
 
 module Environment = CCMap.Make(Name_module)
 
@@ -123,7 +121,6 @@ let set_current_environment env =
     | Some value -> ExtUnix.Specific.setenv key (string_of_value value) true
   end
   env
-  
 end
 
 let rollback ?(version=1) env name =
