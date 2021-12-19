@@ -1,4 +1,4 @@
 (library
  (name absente)
  (public_name absente)
- (libraries unix containers containers-data extunix))
+ (libraries unix containers containers-data extunix dbm))
