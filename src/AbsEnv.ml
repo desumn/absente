@@ -125,3 +125,12 @@ let set_current_environment env =
   env
   
 end
+
+let rollback ?(version=1) env name =
+  if Manipulation.exists_version name env then
+    let variable_version_count = (Manipulation.version_count name env) in
+      match Manipulation.get_version name (variable_version_count - (version + 1)) env with
+      | Some new_value -> Some (Manipulation.set name new_value env)
+      | None -> None
+  else 
+    Some env 
