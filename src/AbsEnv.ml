@@ -4,10 +4,16 @@ type name = String.t
 let valid_name name = not @@ CCString.is_empty name || CCString.contains name '='
 
 module Name_module = CCString
-type value = string list
+type value = string
 
-let string_of_value value = CCList.to_string ~sep:":" (CCFun.id) value
-let value_of_string str = CCString.split_on_char ':' str
+let string_of_value value : string = value
+let value_of_string str : value = str
+
+let emptyval = String.empty
+
+let value_equal = String.equal
+
+let is_empty value = value_equal value emptyval
 
 let variable_of_string str = 
   match CCString.Split.left ~by:"=" str with
@@ -19,12 +25,15 @@ let variable_of_string str =
       
 let string_of_variable var =
   let name, value = var in
-  if (not @@ valid_name name) || CCList.is_empty value
+  if (not @@ valid_name name) || is_empty value
   then None
   else Some (Format.sprintf "%s=%s" name (string_of_value value))
 
 
 module Environment = CCMap.Make(Name_module)
+
+let new_value = value_of_string
+
 
 type environment = (int * value) list Environment.t
 (* a list of version of the variable is associated with its name, the int represents the "version number"*)
@@ -44,7 +53,7 @@ let get variable_name env =
   | Some version_list ->
     begin match get_last_version version_list with
     | None -> None
-    | Some (_, []) -> None
+    | Some (_, value) when is_empty value -> None
     | Some (_, value) -> Some value
     end
 
@@ -54,7 +63,7 @@ let get_version variable_name version env =
   | Some version_list ->
     begin match CCList.assoc_opt ~eq:(Int.equal) version version_list with
     | None -> None
-    | Some [] -> None
+    | Some value when is_empty value -> None
     | Some value -> Some value
     end
 
@@ -81,7 +90,7 @@ let remove variable_name env =
   if exists_version variable_name env
   then 
     if exists variable_name env
-    then set variable_name [] env
+    then set variable_name emptyval env
     else env
   else 
     env  
@@ -97,7 +106,7 @@ let environment_of_array array =
 
 let array_of_environment env =
   let add_if_valid name value_list array =
-    let _, value = Option.value ~default:(0 (* does not matter *), []) (get_last_version value_list) in
+    let _, value = Option.value ~default:(0 (* does not matter *), emptyval) (get_last_version value_list) in
     match string_of_variable (name, value) with
     | None -> array
     | Some str -> CCArray.append array [|str|]

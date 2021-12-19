@@ -7,7 +7,10 @@
 
 
 type name = string 
-type value = string list
+type value
+
+val new_value : string -> value
+(** [new_value string] creates a value from a string.*)
 
 type environment
 (** The type of an Unix environment.
