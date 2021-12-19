@@ -60,3 +60,9 @@ val set_current_environment : environment -> unit
 (** [set_current_environment env] takes an Absente environment, and modify the current process environment according to what is set in input the Absente environment.*)
 
 end
+
+val rollback : ?version:int -> environment -> name-> environment option
+(** [rollback env name versions] rollbacks an environment variable to an old value, "versions" is the number of version to rollback, by default one. 
+    If the rollack is too important (so that versions is greater than the number of version of the variable modified), returns None, returns the modified environment otherwise.
+    This funciton won't return None if the requested variable does not exists, it will just do nothing.*)
+
